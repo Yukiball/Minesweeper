@@ -1,0 +1,83 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.tital{
+	height: 75px;
+	width: 720px;
+	line-height: 75px;
+	text-align: center;
+	margin:0 auto;
+	font-weight: bolder;
+	font-size: 40px;
+	font-family: "Microsoft YaHei";
+}
+.gamebody{
+	position: relative;
+	width: 776px;
+	margin:0 auto;
+	border:2px solid black;
+}
+.gamebody .main{
+	height: 520px;
+	width: 770px;
+	border: 3px double #0f0;
+	background-color: yellow;
+}
+.gamebody .main .pika{
+	position: relative;
+	margin: 20px auto;
+	height: 40px;
+	width: 40px;
+	box-shadow: 3 px gray;
+	background-image: url(皮卡丘.jpg);
+	background-size: 40px 40px;
+}
+.gamebody .main .ul_box{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -200px;
+	margin-top:-175px;
+	height: 400px;
+	width: 400px;
+	border: 1px solid gray;
+}
+.gamebody .main #box{
+	position: absolute;
+	margin-left: -1px;
+	height: 400px;
+	width: 400px;
+}
+.gamebody .main #box li{
+	position: relative;
+	display:block;
+	background-color: #fff;
+	background-size: 39px 39px;
+	opacity: 1;	
+	float: left;
+	height: 39px;
+	width: 39px;
+	border-left: 1px solid gray;
+	border-bottom: 1px solid gray;
+	text-align: center;
+	line-height: 39px;
+}
+.gamebody .main #box li:hover{
+	opacity: 0.8;
+}
+.gamebody .main #box .boom{
+	background-image: url(精灵球.png);
+	background-size: 39px 39px;
+}
+.gamebody .main #box li div{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #222;	
+	background-size: 39px 39px;
+	left: 0px;
+	top: 0px;
+	/*opacity: 0.8;	*/
+}

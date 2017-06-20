@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset="utf-8">
+	<title>躲避精灵球</title>
+	<link rel="stylesheet" type="text/css" href="Pikachu.css">
+</head>
+<body>
+	<div class = "tital">躲避精灵球</div>
+	<div class = "gamebody">
+		<div class = "main">
+			<div class="pika"></div>
+			<div class = "ul_box">
+				<ul id ="box"></ul>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		function getStyle(elem, prop){
+			if(window.getComputedStyle){
+				return window.getComputedStyle(elem, null)[prop];
+			}else{
+				return elem.currentStyle[prop];
+			}
+		}
+	</script>
+	<script type="text/javascript">
+	board();
+	var objli;
+	var boom;
+	var num = 15;
+	var ul = document.getElementsByTagName('ul')[0];
+	var oLi = document.getElementsByTagName('li');
+	function GetRandomNum (min,max){
+		var num = max - min;
+		var random = Math.random();
+		return (min + Math.round(num * random))
+	}
+	function numPlace(origin){
+		var num ;
+			num = [];
+			var arr = origin.split(',');
+			var x = Number(arr[0]),
+				y = Number(arr[1]); 
+			num[0] = (x - 1) + "," + (y - 1);
+			num[1] = (x - 1) + "," + y;
+			num[2] = (x - 1) + "," + (y + 1);
+			num[3] = x + "," + (y - 1);
+			num[4] = x + "," + (y + 1);
+			num[5] =(x + 1) + "," + (y - 1);
+			num[6] = (x + 1) + "," + y;
+			num[7] = (x + 1) + "," + (y + 1);
+			return num;
+	}
+	//棋盘
+	function board(){
+		var ul = document.getElementsByTagName('ul')[0];
+		var xleng = parseInt(getStyle(box,'width')) / 40;
+		var yleng = parseInt(getStyle(box,'height')) / 40;
+		var grid = 0;
+		objli ={};
+		boom = {};
+		var html = "";
+		for (x = 0; x < yleng; x ++ ){
+			for(y = 0; y < xleng; y ++){
+				html += '<li><div class="over"></div></li>';
+			}
+		}
+		ul.innerHTML = html;
+		var li = document.getElementsByTagName('li');
+		for (x = 0; x < yleng; x ++ ){
+			for(y = 0; y < xleng; y ++){
+				objli[ x +","+ y] = li[grid];
+				grid ++;
+			}
+		}
+		for (var i = 0; i < 15; i++){
+			var bx = GetRandomNum (0,9),
+				by = GetRandomNum (0,9);
+			objli[bx +","+ by].className = 'boom';
+			if(boom[bx +","+ by]){
+				i--;
+			}
+			boom[bx +","+ by] = objli[bx +","+ by];
+		}
+		for(var name in boom){
+			for(i = 0; i < 8; i ++){
+				if (objli[numPlace(name)[i]] && objli[numPlace(name)[i]].className !=='boom') {
+					objli[numPlace(name)[i]].innerHTML = 1 + Number(objli[numPlace(name)[i]].innerText) + '<div></div>';
+				};
+			}
+		}
+	}
+	// 点击
+	document.oncontextmenu = function(){//右键默认取消
+		return false
+	}
+	var pika = document.getElementsByClassName('pika')[0];
+	pika.onmousedown = function(e){
+		var event = e || window.event;
+		location.reload(true);//刷新页面
+	}
+	ul.onmouseup = function (e){
+		var event = e || window.event;
+		var Target = event.target;
+		var Parent = Target.parentNode;
+		var chess = '';
+		for(var prop in objli){
+			if (Target == objli[prop]) {
+				return false;
+			}else if (objli[prop] == Parent) {
+				chess = prop;
+			}
+		}
+
+		if (event.button == 0){
+			if (Target.style.backgroundImage) {
+				return false;
+			};
+			if(Parent.innerText){
+				Target.style.opacity = 0;
+			}else if (Parent.className == 'boom') {
+				for(var prop in boom){
+					var booming = boom[prop].children[0];
+					booming.style.opacity = 0;	
+				}
+				setTimeout(function(){
+					alert('GAME OVER!!! \n你被捕捉了');
+					ul.onmouseup = false;
+				},100);
+			}else if(!Parent.innerText ){
+				blank(chess);
+			}
+			function blank(remove){
+				for (var i = 0; i < 8; i++) {
+					if (objli[numPlace(remove)[i]]) {
+						var clickblank = objli[remove].children[0];
+						clickblank.style.opacity = 0;
+						var mychild = numPlace(remove)[i];
+						var childdiv =objli[mychild].children[0];
+						childdiv.style.opacity = 0;
+						objli[remove].setAttribute('action','recursion');
+						var style = objli[mychild].style.opacity;
+						var children = numPlace(mychild)[i];
+						var childrendiv = objli[mychild].children;
+						if (!objli[mychild].innerText ) {
+							if (!objli[mychild].getAttribute('action')) {
+								blank(mychild);
+							}
+						};
+					}
+				}	
+			}	
+		}else if (event.button = 2){
+			if (Target.style.backgroundImage) {
+				Target.style.backgroundImage = '';
+				if (Parent.className == 'boom') {
+					num ++;
+					console.log(num);
+				};
+			}else{
+				Target.style.backgroundImage = 'url(标记.jpg)';
+				if (Parent.className == 'boom') {
+					num --;
+					console.log(num);
+				};
+			}
+			if (num == 0) {
+				setTimeout(function(){
+					alert('成功躲避精灵球的捕捉~')
+					ul.onmouseup = null;	
+					// over.style.opacity = 0;
+					for(var i = 0; i < oLi.length; i ++) {
+						oLi[i].children[0].style.opacity = '0';
+					}
+				})
+			};
+		}
+	}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</script>
+
+</body>
+</html>
